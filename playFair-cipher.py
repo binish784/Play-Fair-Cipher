@@ -12,7 +12,8 @@ class playFair:
     def __init__(self):
         w,h=5,5
         self.key=[[0 for x in range(w)] for y in range(h)]
-        
+        self.invertKey=[[0 for x in range(w)] for y in range(h)]
+    
     def defineKeyword(self,key_letters):
         key_letters=key_letters.replace("j","i")
         letters='abcdefghiklmnopqrstuvwxyz'
@@ -35,10 +36,25 @@ class playFair:
                 a=a+1
                 row=row+self.key[i][j]+" "                
             print("\t"+row)
+        
+        print("\n\tInverted Key:\n")    
+        for i in range(5):
+            row=""
+            for j in range(5):
+                self.invertKey[i][j]=self.key[j][i]
+                row=row+self.invertKey[i][j]+" "
+            print("\t"+row)
             
     def encrypt(self,plain_text):
-        print("\nstep 1 : "+ str(self.rule1(plain_text)))
-            
+        ruleA=self.rule1(plain_text)
+        print("\nstep 1 : "+str(ruleA))
+        ruleB=self.rule2(ruleA)  
+        print("\nstep 2 : "+str(ruleB))
+        ruleC=self.rule3(ruleB)
+        print("\nstep 3 : "+str(ruleC))
+        exit(1)
+        
+        
     def rule1(self,plain_text):
         new_plain_list=[]
         plain_list=list(plain_text)
@@ -55,8 +71,60 @@ class playFair:
             new_plain_list.append('x')
         return(new_plain_list)
      
-        
-print("\n\tPlay Fair Cipher\n")    
+    def rule2(self,plain_list):
+        new_plain_list=[]
+        while(len(plain_list)>1):   
+            flag=0
+            for i in range(5):
+                if(plain_list[0] in self.key[i] and plain_list[1] in self.key[i]):
+                    index_0=self.key[i].index(plain_list[0])+1
+                    index_1=self.key[i].index(plain_list[1])+1
+                    if(index_0==5):
+                        index_0=0
+                    if(index_1==5):
+                        index_1=0
+                    new_plain_list.append(self.key[i][index_0])
+                    new_plain_list.append(self.key[i][index_1])
+                    del plain_list[1]
+                    del plain_list[0]
+                    flag=1
+                    break
+            if(flag==0):
+                new_plain_list.append(plain_list[0])
+                new_plain_list.append(plain_list[1])
+                del plain_list[1]
+                del plain_list[0]
+        return(new_plain_list)            
+             
+                 
+    def rule3(self,plain_list):
+        new_plain_list=[]
+        while(len(plain_list)>1):   
+            flag=0
+            for i in range(5):
+                    if(plain_list[0] in self.invertKey[i] and plain_list[1] in self.invertKey[i]):
+                        index_0=self.invertKey[i].index(plain_list[0])+1
+                        index_1=self.invertKey[i].index(plain_list[1])+1
+                        if(index_0==5):
+                            index_0=0
+                        if(index_1==5):
+                            index_1=0
+                        new_plain_list.append(self.invertKey[i][index_0])
+                        new_plain_list.append(self.invertKey[i][index_1])
+                        del plain_list[1]
+                        del plain_list[0]
+                        flag=1
+                        break
+            if(flag==0):
+                new_plain_list.append(plain_list[0])
+                new_plain_list.append(plain_list[1])
+                del plain_list[1]
+                del plain_list[0]
+        return(new_plain_list)            
+                 
+                
+                
+print("\n    Play Fair Cipher\n")    
 x=playFair()
 x.defineKeyword("monarchy")
 x.makeKey()
