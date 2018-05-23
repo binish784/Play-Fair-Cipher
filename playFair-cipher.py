@@ -59,70 +59,61 @@ class playFair:
         new_plain_list=[]
         plain_list=list(plain_text)
         while (len(plain_list)>1):
-            new_plain_list.append(plain_list[0])
+            list_block=[]
+            list_block.append(plain_list[0])
             if(plain_list[0]!=plain_list[1]):
-                new_plain_list.append(plain_list[1])
+                list_block.append(plain_list[1])
                 del plain_list[1]
             elif(plain_list[0]==plain_list[1]):
-                new_plain_list.append('x')
+                list_block.append('x')
             del plain_list[0]
+            list_block.append(0)
+            new_plain_list.append(list_block)
         if(len(plain_list)==1):
-            new_plain_list.append(plain_list[0])
-            new_plain_list.append('x')
+            list_block=[]
+            list_block.append(plain_list[0])
+            list_block.append('x')
+            list_block.append(0)
+            new_plain_list.append(list_block)
         return(new_plain_list)
      
     def rule2(self,plain_list):
-        new_plain_list=[]
-        while(len(plain_list)>1):   
-            flag=0
+        for item in plain_list:   
             for i in range(5):
-                if(plain_list[0] in self.key[i] and plain_list[1] in self.key[i]):
-                    index_0=self.key[i].index(plain_list[0])+1
-                    index_1=self.key[i].index(plain_list[1])+1
+                if(item[0] in self.key[i] and item[1] in self.key[i]):
+                    index_0=self.key[i].index(item[0])+1
+                    index_1=self.key[i].index(item[1])+1
                     if(index_0==5):
                         index_0=0
                     if(index_1==5):
                         index_1=0
-                    new_plain_list.append(self.key[i][index_0])
-                    new_plain_list.append(self.key[i][index_1])
-                    del plain_list[1]
-                    del plain_list[0]
-                    flag=1
+                    item[0]=self.key[i][index_0]
+                    item[1]=self.key[i][index_1]
+                    item[2]=1
                     break
-            if(flag==0):
-                new_plain_list.append(plain_list[0])
-                new_plain_list.append(plain_list[1])
-                del plain_list[1]
-                del plain_list[0]
-        return(new_plain_list)            
+        return(plain_list)            
              
                  
     def rule3(self,plain_list):
-        new_plain_list=[]
-        while(len(plain_list)>1):   
-            flag=0
-            for i in range(5):
-                    if(plain_list[0] in self.invertKey[i] and plain_list[1] in self.invertKey[i]):
-                        index_0=self.invertKey[i].index(plain_list[0])+1
-                        index_1=self.invertKey[i].index(plain_list[1])+1
-                        if(index_0==5):
-                            index_0=0
-                        if(index_1==5):
-                            index_1=0
-                        new_plain_list.append(self.invertKey[i][index_0])
-                        new_plain_list.append(self.invertKey[i][index_1])
-                        del plain_list[1]
-                        del plain_list[0]
-                        flag=1
-                        break
-            if(flag==0):
-                new_plain_list.append(plain_list[0])
-                new_plain_list.append(plain_list[1])
-                del plain_list[1]
-                del plain_list[0]
-        return(new_plain_list)            
-                 
-                
+        for item in plain_list:
+            if(item[2]==1):
+                continue
+            else:
+                for i in range(5):
+                        if(item[0] in self.invertKey[i] and item[1] in self.invertKey[i]):
+                            index_0=self.invertKey[i].index(item[0])+1
+                            index_1=self.invertKey[i].index(item[1])+1
+                            if(index_0==5):
+                                index_0=0
+                            if(index_1==5):
+                                index_1=0
+                            item[0]=self.invertKey[i][index_0]
+                            item[1]=self.invertKey[i][index_1]
+                            item[2]=1
+                            break
+            return(plain_list)            
+                     
+                    
                 
 print("\n    Play Fair Cipher\n")    
 x=playFair()
