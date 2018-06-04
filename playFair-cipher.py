@@ -46,13 +46,21 @@ class playFair:
             print("\t"+row)
             
     def encrypt(self,plain_text):
+        final_list=[]
         ruleA=self.rule1(plain_text)
         print("\nstep 1 : "+str(ruleA))
         ruleB=self.rule2(ruleA)  
         print("\nstep 2 : "+str(ruleB))
         ruleC=self.rule3(ruleB)
         print("\nstep 3 : "+str(ruleC))
-        exit(1)
+        ruleD=self.rule4(ruleC)
+        print("\nstep 4 : "+str(ruleD))
+        for item in ruleD:
+            final_list.append(item[0])
+            final_list.append(item[1])
+        encrypted_Txt="".join(final_list)
+        return(encrypted_Txt)
+        #exit(1)
         
         
     def rule1(self,plain_text):
@@ -78,7 +86,7 @@ class playFair:
         return(new_plain_list)
      
     def rule2(self,plain_list):
-        for item in plain_list:   
+        for item in plain_list:
             for i in range(5):
                 if(item[0] in self.key[i] and item[1] in self.key[i]):
                     index_0=self.key[i].index(item[0])+1
@@ -113,10 +121,33 @@ class playFair:
                             break
             return(plain_list)            
                      
-                    
+    def rule4(self,plain_list):
+        for item in plain_list:
+            if(item[2]==1):
+                continue
+            else:
+              xindex_0,yindex_0,xindex_1,yindex_1=9,9,9,9
+              for i in range(5):
+                  if(item[0] in self.key[i]):
+                      xindex_0=self.key[i].index(item[0])
+                      yindex_0=i
+                  if(item[1] in self.key[i]):
+                      xindex_1=self.key[i].index(item[1])
+                      yindex_1=i
+                  if(xindex_0!=9 and yindex_0!=9 and xindex_1!=9 and yindex_1!=9):
+                      break
+              if(xindex_0!=9 and yindex_0!=9 and xindex_1!=9 and yindex_1!=9):
+                 item[0]=self.key[yindex_0][xindex_1]
+                 item[1]=self.key[yindex_1][xindex_0]
+                 item[2]=1
+        return(plain_list)
+        
                 
 print("\n    Play Fair Cipher\n")    
 x=playFair()
-x.defineKeyword("monarchy")
+plain=input("Enter plain Text : ")
+keyword=input("\nEnter the keyword : ")
+x.defineKeyword(keyword)
 x.makeKey()
-x.encrypt("balloon")
+Enc_Text=x.encrypt(plain)
+print("\n Encrypted Text : "+ Enc_Text)
